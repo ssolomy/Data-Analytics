@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stacked Bar Plot</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    .legend-item {
+      margin-right: 20px;
+      display: inline-block;
+    }
+    .legend-color {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+    #chart {
+      float: left;
+      margin-bottom: 50px; /* Adjust spacing between x-axis label and legend */
+    }
+    #legend {
+      clear: both;
+      margin-left: 100px; /* Adjust as needed */
+    }
+  </style>
+</head>
+<body>
+  <svg width="800" height="600" id="chart"></svg>
+  <div id="legend"></div>
+  <div id="color-scale"></div>
+
+  <script>
+    // Sample data
+    const data = [
+      { region: "Eastern", values: [978428, 713338, 109191, 1629413] },
+      { region: "Northern", values: [625349, 597281,  215154, 1233776] },
+      { region: "Central", values: [1527213,  527222,  258504 , 2040517] },
+      { region: "Western", values: [1274731, 487628,  170011,  1806933] }
+    ];
+
+    // Array of colors for each region
+    const colors = ["red", "green", "blue", "orange"];
+
+    // Corresponding items for each color
+    const items = ["Radio", "Bicycle", "Motorcycle", "Mosquito Net"];
+
+    // Chart dimensions
+    const width = 800;
+    const height = 600;
+    const margin = { top: 60, right: 20, bottom: 50, left: 100 }; // Increased left margin for the y-axis label
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
+
+    // Calculate maximum value dynamically
+    const maxStackedValue = d3.max(data, d => d3.sum(d.values));
+    const minStackedValue = 0; // Set minimum value
+
+    // Manually set scale parameters
+    const scaleInterval = 500000; // Interval for the scale
+
+    // Create SVG element
+    const svg = d3.select("#chart")
+                  .attr("width", width)
+                  .attr("height", height);
+
+    // Create scales
+    const xScale = d3.scaleBand()
+                     .domain(data.map(d => d.region))
+                     .range([margin.left, innerWidth + margin.left])
+                     .padding(0.1);
+
+    const yScale = d3.scaleLinear()
+                     .domain([minStackedValue, maxStackedValue]) // Adjust domain for minimum and maximum values
+                     .nice(scaleInterval)
+                     .range([innerHeight + margin.top, margin.top]);
+
+    // Draw stacked bars
+    const stack = d3.stack().keys(d3.range(data[0].values.length));
+    const stackedData = stack(data.map(d => d.values));
+
+    svg.selectAll("g")
+       .data(stackedData)
+       .enter().append("g")
+       .attr("fill", (_, i) => colors[i])
+       .selectAll("rect")
+       .data(d => d)
+       .enter().append("rect")
+       .attr("x", (d, i) => xScale(data[i].region))
+       .attr("y", d => yScale(d[1]))
+       .attr("height", d => yScale(d[0]) - yScale(d[1]))
+       .attr("width", xScale.bandwidth());
+
+    // Add X axis
+    svg.append("g")
+       .attr("transform", `translate(0,${innerHeight + margin.top})`)
+       .call(d3.axisBottom(xScale))
+       .append("text")
+       .attr("x", width / 2)
+       .attr("y", margin.bottom - 10)
+       .attr("dy", "1em")
+       .style("text-anchor", "middle")
+       .text("Categories");
+
+    // Add Y axis
+    svg.append("g")
+       .attr("transform", `translate(${margin.left},0)`)
+       .call(d3.axisLeft(yScale));
+
+    // Add Y axis label
+    svg.append("text")
+       .attr("transform", "rotate(-90)")
+       .attr("y", margin.left - 80) // Adjust position accordingly
+       .attr("x", -innerHeight / 2)
+       .attr("dy", "1em")
+       .style("text-anchor", "middle")
+        .style("font-size", "20px")
+       .text("Number of Assets");
+
+    // Add X axis label
+    svg.append("text")
+       .attr("x", width / 2)
+       .attr("y", height - margin.bottom / 3)
+       .attr("dy", "1em")
+       .style("text-anchor", "middle")
+        .style("font-size", "14px")
+       .text("Regions");
+
+    // Add chart title
+    svg.append("text")
+       .attr("x", width / 2)
+       .attr("y", margin.top / 8)
+       .attr("dy", "1em")
+       .style("text-anchor", "middle")
+       .style("font-size", "20px")
+       .text("Stacked Bar Plot showing total number of Household assets");
+
+    // Add legend
+    const legend = d3.select("#legend");
+
+    legend.selectAll(".legend-item")
+          .data(items)
+          .enter().append("div")
+          .attr("class", "legend-item")
+          .html((d, i) => `<span class="legend-color" style="background-color: ${colors[i]}"></span>${d}`);
+
+  </script>
+</body>
+</html>

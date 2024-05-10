@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-Tabbed Page</title>
+<style>
+  /* Basic styling for tabs */
+  .tab-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .tab-button {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin: 0 5px;
+  }
+  .tab-button.active {
+    background-color: #fff;
+    border-bottom: 1px solid #fff;
+  }
+  .tab-content {
+    display: flex;
+    justify-content: center;
+  }
+  .tab {
+    display: none;
+    width: 100%;
+  }
+  .tab.active {
+    display: block;
+  }
+</style>
+</head>
+<body>
+
+<div class="tab-container">
+  <!-- Tab buttons -->
+  <div class="tab-buttons">
+    <div class="tab-button" onclick="openTab(event, 'tab1')">Histogram</div>
+    <div class="tab-button" onclick="openTab(event, 'tab2')">Bar Plot</div>
+    <div class="tab-button" onclick="openTab(event, 'tab3')">Scatter</div>
+    <div class="tab-button" onclick="openTab(event, 'tab4')">Line</div>
+    <div class="tab-button" onclick="openTab(event, 'tab5')">Pie</div>
+    <div class="tab-button" onclick="openTab(event, 'tab6')">2 Pie's</div>
+    <div class="tab-button" onclick="openTab(event, 'tab7')">Pack and Bubble</div>
+    <div class="tab-button" onclick="openTab(event, 'tab8')">Tree Layout</div>
+  </div>
+  <!-- Tab content -->
+  <div class="tab-content">
+    <div class="tab" id="tab1">
+      <h2>Visual 1</h2>
+      <p><iframe src="Bar plot.html" width="1000" height="1000" frameborder="0"></iframe></p>
+    </div>
+    <div class="tab" id="tab2">
+      <h2>Visual 2</h2>
+      <p><iframe src="Histogram.html" width="1000" height="1000" frameborder="0"></iframe></p>
+    </div>
+    <div class="tab" id="tab3">
+      <h2>Visual 3</h2>
+      <p><iframe src="Scatter Plot.html" width="1000" height="1000" frameborder="0" scrolling="no" ></iframe></p>
+    </div>
+<div class="tab" id="tab4">
+      <h2>Visual 4</h2>
+      <p><iframe src="Multi Line Graph.html" width="1000" height="1000" frameborder="0" scrolling="no" ></iframe></p>
+    </div>
+    <div class="tab" id="tab5">
+      <h2>Visual 5</h2>
+      <p><iframe src="pie.html" width="1000" height="1000" frameborder="0" scrolling="no" ></iframe></p>
+    </div>
+    <div class="tab" id="tab6">
+      <h2>Visual 6</h2>
+      <p><iframe src="2p.html" width="1000" height="1000" frameborder="0" scrolling="no" ></iframe></p>
+    </div>
+<div class="tab" id="tab7">
+      <h2>Visual 7</h2>
+      <p><iframe src="Pack and Bubble.html" width="1000" height="1000" frameborder="0" scrolling="no" ></iframe></p>
+    </div>
+<div class="tab" id="tab8">
+      <h2>Visual 8</h2>
+      <p><iframe src="Tree Layout.html" width="1000" height="1000" frameborder="0" scrolling="no" ></iframe></p>
+    </div>
+
+
+  </div>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+  // Hide all tabs and remove 'active' class from tab buttons
+  var tabs = document.getElementsByClassName("tab");
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].style.display = "none";
+  }
+  var tabButtons = document.getElementsByClassName("tab-button");
+  for (var i = 0; i < tabButtons.length; i++) {
+    tabButtons[i].classList.remove("active");
+  }
+
+  // Show the selected tab and add 'active' class to its button
+  document.getElementById(tabName).style.display = "block";
+  evt.currentTarget.classList.add("active");
+}
+// Show the first tab by default
+document.getElementById("tab1").style.display = "block";
+document.getElementsByClassName("tab-button")[0].classList.add("active");
+</script>
+
+</body>
+</html>

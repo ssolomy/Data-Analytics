@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Layout</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .node circle {
+            fill: #fff;
+            stroke: mediumslateblue;
+            stroke-width: 2px;
+        }
+
+        .node text {
+            font: 12px sans-serif;
+        }
+
+        .link {
+            fill: none;
+            stroke: rosybrown;
+            stroke-width: 2px;
+        }
+
+        .title {
+            font-size: 20px;
+            text-anchor: middle;
+            fill: black;
+        }
+    </style>
+</head>
+<body>
+    <svg width="1000" height="400"></svg>
+
+    <script>
+        const treeData = {
+            "name": "Uganda",
+            "children": [
+                {
+                    "name": "Central",
+                    "children": [
+                        { "name": "Kampala",
+                          "children": [
+                            { "name": "Central Division" },
+                            { "name": "Kawempe Division" },
+                            { "name": "Lubaga Division" },
+                            { "name": "Makindye Division" },
+                            { "name": "Nakawa Division" },
+                          ]
+                        },
+                        { "name": "Mpigi", 
+                             "children": [
+                                { "name": "Buwama" },
+                                { "name": "Kammengo" },
+                                { "name": "Kiringente" },
+                                { "name": "Kituntu" },
+                                { "name": "Mpigi Town Council" },
+                                { "name": "Muduuma" },
+                                { "name": "Nkozi" },
+                          ]
+                        
+                    },
+
+                    ]
+                },
+                //another region
+
+                   {
+                    "name": "Eastern",
+                    "children": [
+                        { "name": "Jinja",
+                          "children": [
+                            { "name": "Central Division" },
+                            { "name": "Mpumudde Division" },
+                            { "name": "Busedde" },
+                            { "name": "Kakira Town Council" },
+                            { "name": "Mafubira" },
+                            { "name": "Masese Walukuba" },
+                            { "name": "Budondo" },
+                            { "name": "Butagaya" },
+                            { "name": "Buwenge" },
+                            { "name": "Buwenge Town Council" },
+                            { "name": "Buyengo" },
+
+
+                          ]
+                        },
+                        { "name": "Ngora", 
+                             "children": [
+                                { "name": "Kapir" },
+                                { "name": "Kobwin" },
+                                { "name": "Mukura" },
+                                { "name": "Ngora" },
+                                { "name": "Ngora Town Council" },
+                                
+                          ]
+                        
+                    },
+
+                    ]
+                },
+
+                   {
+                    "name": "Northern",
+                    "children": [
+                        { "name": "Amudat",
+                          "children": [
+                            { "name": "Amudat" },
+                            { "name": "Amudat Town Council" },
+                            { "name": "Lubaga Division" },
+                            { "name": "Karita" },
+                            { "name": "Loroo" },
+                          ]
+                        },
+                        { "name": "Abim", 
+                             "children": [
+                                { "name": "Abim" },
+                                { "name": "Abim Town Council" },
+                                { "name": "Alerek" },
+                                { "name": "Lotukei" },
+                                { "name": "Morulem" },
+                                { "name": "Nyakwae" },
+                                
+                          ]
+                        
+                    },
+
+                    ]
+                },
+
+                   {
+                    "name": "Western",
+                    "children": [
+                        { "name": "Masindi",
+                          "children": [
+                            { "name": "Kigulya Division" },
+                            { "name": "Karujubu Division" },
+                            { "name": "Nyangahya Division" },
+                            { "name": "Central Division" },
+                            { "name": "Budongo" },
+                            { "name": "Bwijanga" },
+                            { "name": "Kimengo" },
+                            { "name": "Miirya" },
+                            { "name": "Pakanyi" },
+                          ]
+                        },
+                        { "name": "Kiryandongo", 
+                             "children": [
+                                { "name": "Bweyale Town Council" },
+                                { "name": "Kigumba" },
+                                { "name": "Kigumba Town Council" },
+                                { "name": "Kiryandongo" },
+                                { "name": "Kiryandongo Refugee Camp" },
+                                { "name": "Kiryandongo Town Council" },
+                                { "name": "Masindi Port" },
+                                { "name": "Mutunda" },
+                          ]
+                        
+                    },
+
+                    ]
+                },
+                //another region
+               
+                
+            ]
+        };
+
+
+        const margin = {top: 20, right: 150, bottom: 30, left: 90};
+        const width = 800 - margin.left - margin.right;
+        const height = 800 - margin.top - margin.bottom;
+
+        const svg = d3.select("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Add title
+        svg.append("text")
+            .attr("class", "title")
+            .attr("x", width / 2)
+            .attr("y", margin.top / 7)
+            .text("A Tree layout of selected Administrative Divisions of Uganda");
+
+        const treeLayout = d3.tree()
+            .size([height, width]);
+
+        const root = d3.hierarchy(treeData);
+        const tree = treeLayout(root);
+
+        const link = svg.selectAll(".link")
+            .data(tree.links())
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("d", d3.linkHorizontal()
+                .x(d => d.y)
+                .y(d => d.x));
+
+        const node = svg.selectAll(".node")
+            .data(tree.descendants())
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", d => `translate(${d.y},${d.x})`);
+
+        node.append("circle")
+            .attr("r", 5);
+
+        node.append("text")
+            .attr("dy", "0.31em")
+            .attr("x", d => d.children ? -6 : 6)
+            .attr("text-anchor", d => d.children ? "end" : "start")
+            .text(d => d.data.name);
+    </script>
+</body>
+</html>

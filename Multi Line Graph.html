@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<body>
+<canvas id="myChart" style="width:80%;max-width:80%"></canvas>
+
+<script>
+const xValues =[0,2000,4000,6000,8000,10000,12000,14000,16000,18000,20000,22000,24000,26000,28000,30000,32000,34000,36000,38000,40000,42000,44000,46000,48000,50000,52000,54000,56000,58000,60000];
+const colors = ["red", "green", "blue", "orange"];
+
+
+
+new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{ 
+      data: [46015,36406,35857,61683,35021,15713,32528,60540,42947,58505,97164,95858,37310,37416,89817,
+19698,29127,34657,39534,17108,42568,71196,75065,101807,40053,43672,22710,63404,52621,51985,97862
+
+],
+      borderColor: colors[0],
+      fill: false
+    }, { 
+      data: [17581,37794,41807,45229,26927,13468,33205,69304,129117,34178,81569,28494,37731,29416,46861,
+24853,25464,85594,35460,25489,23613,25077,75196,3001,21515,73575,32364,61973,47921,0,0
+],
+      borderColor: colors[1],
+      fill: false
+    }, { 
+      data: [86352,31441,19529,20952,32385,15915,38310,357403,69602,31163,43191,94065,57834,19478,67213,
+71149,52191,138625,124410,38500,33262,108769,51762,437016,0,0,0,0,0,0
+
+],
+      borderColor: colors[2],
+      fill: false
+    },
+     { 
+      data: [3943,20543,42776,49214,113864,52625,90172,114697,101405,82932,53857,132641,160027,62943,
+48231,59779,55727,86040,59687,105840,38891,13189,98443,27998,67075,44394,0,0,0,0,0],
+      borderColor: colors[3],
+      fill: false},]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'A Multi Line Graph showing Number of Mosquito Nets by Region'
+    },
+    legend: {display: false},
+    scales: {
+      xAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Number of Mosquito Nets'
+        }
+      }],
+      yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Number of House Holds'
+        }
+      }]
+    }
+  }
+});
+// Add legend manually
+const legend = document.createElement("div");
+legend.style.marginTop = "10px";
+const regions = ["Eastern", "Northern", "Central", "Western"];
+colors.forEach((color, index) => {
+  const item = document.createElement("div");
+  item.style.display = "inline-block";
+  item.style.marginRight = "10px";
+  const square = document.createElement("div");
+  square.style.width = "20px";
+  square.style.height = "20px";
+  square.style.backgroundColor = color;
+  square.style.display = "inline-block";
+  const label = document.createElement("span");
+  label.textContent = `${regions[index]} Region`; // Update label text
+  item.appendChild(square);
+  item.appendChild(label);
+  legend.appendChild(item);
+});
+document.body.appendChild(legend);
+
+</script>
+</body>
+</html>

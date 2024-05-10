@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scatter Plot with Axis Labels</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    /* Center SVG within the page */
+    #chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #chart {
+      /* Adjust SVG size as needed */
+      max-width: 100%;
+      max-height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="chart-container">
+    <svg id="chart"></svg>
+  </div>
+
+  <script>
+    // Sample data
+    const data = [
+     { x: 24816, y: 16389 },
+      { x: 21652, y: 11968 },
+      { x: 44827, y: 29851 },
+      { x: 51363, y: 38357 },
+      { x: 125576, y: 83836},
+      { x: 55000, y: 39145},
+      { x: 101744, y: 65415},
+      { x: 117903, y: 86731},
+      { x: 107464, y: 79662},
+      { x: 89068, y: 54677},
+      { x: 56109, y: 39283},
+      { x: 138864, y: 88853},
+      { x: 168372, y: 112398},
+      { x: 67302, y: 45941},
+      { x: 52223, y: 26958},
+      { x: 62290, y: 39645},
+      { x: 60085, y: 34730},
+      { x: 91532, y: 54222},
+      { x: 64929, y: 35293},
+      { x: 113071, y: 80439},
+      { x: 39817, y: 27610},
+      { x: 13942, y: 7527},
+      { x: 101836, y: 72404},
+      { x: 28798, y: 18422},
+      { x: 69579, y: 50349},
+      { x: 46203, y: 34626},
+      { x: 18083, y: 5480},
+      { x: 41360, y: 13955},
+      { x: 43418, y: 15678},
+      { x: 46280, y: 23668},
+      { x: 27988, y: 15685},
+      { x: 0, y: 15494},
+      { x: 36694, y: 15107},
+      { x:71680, y: 42524},
+      { x: 146714, y: 76894},
+      { x: 34870, y: 21479},
+      { x: 87120, y: 48081},
+      { x: 29211, y: 2364},
+      { x: 39726, y: 15649},
+      { x: 30284, y: 16177},
+      { x: 48394, y: 28129},
+      { x: 26192, y: 2283},
+      { x: 27185, y: 9435},
+      { x: 89170, y: 53428},
+      { x: 36284, y: 16580},
+      { x: 25881, y: 13706},
+      { x: 25411, y: 3247},
+      { x: 26764, y: 4054},
+      { x: 77503, y: 32431},
+      { x: 24571, y: 12780},
+      { x: 21957, y: 9498},
+      { x: 76615, y: 42359},
+      { x: 34223, y: 14179},
+      { x: 63786, y: 34013},
+      { x: 50278, y: 20992},
+      { x: 98153, y: 63178},
+      { x: 34390, y: 25659},
+      { x: 21724, y: 16618},
+      { x: 25183, y: 13828},
+      { x: 35286, y: 25469},
+      { x: 20100, y: 12610},
+      { x: 41494, y: 31125},
+      { x: 416803, y: 253583},
+      { x: 76168, y: 49512},
+      { x: 34072, y: 22608},
+      { x: 47773, y: 29908},
+      { x: 105422, y: 74455},
+      { x: 61828, y: 44104},
+      { x: 20639, y: 14163},
+      { x: 75777, y: 53008},
+      { x: 79903, y: 57455},
+      { x: 60523, y: 43333},
+      { x: 151273, y: 104534},
+      { x: 144632, y: 92507},
+      { x: 43167, y: 29125},
+      { x:36314, y: 22293},
+      { x: 116601, y: 80819},
+      { x: 55427, y: 38487},
+      { x: 503442, y: 328832},
+      { x: 48316, y: 25337},
+      { x: 37219, y: 19682},
+      { x: 36883, y: 22646},
+      { x: 74529, y: 40985},
+      { x: 36252, y: 18615},
+      { x: 16638, y:6790},
+      { x: 34028, y: 20575},
+      { x: 64812, y: 64812},
+      { x: 44376, y: 23153},
+      { x: 61297, y: 37761},
+      { x: 102703, y: 64063},
+      { x: 105673, y: 58709},
+      { x: 38797, y: 22042},
+      { x: 42966, y: 26088},
+      { x: 93834, y: 58390},
+      { x: 20466, y: 11566},
+      { x: 30791, y: 14459},
+      { x: 35474, y: 17551},
+      { x: 40805, y: 21594},
+      { x: 17870, y: 8310},
+      { x: 44404, y: 1468},
+      { x: 72905, y: 43109},
+      { x:95533, y: 58573},
+      { x: 108813, y: 64681},
+      { x: 42942, y: 23057},
+      { x: 45322, y: 27334},
+      { x: 23695, y: 13638},
+      { x: 65777, y: 32187},
+      { x: 47823, y: 28408},
+      { x: 54735, y: 30862},
+      { x: 55009, y: 26613},
+      { x: 102627, y: 45370},
+
+      // Include the rest of your data here
+    ];
+
+    // Customizable scale ranges and intervals
+    const xMin = 0,
+          xMax = 200000,
+          yMin = 0,
+          yMax = 150000,
+          xInterval = 10000,
+          yInterval = 10000;
+
+    // Chart dimensions
+    const margin = { top: 50, right: 10, bottom: 50, left: 100 }; // Increased left margin
+    const width = 1000 - margin.left - margin.right;
+    const height = 800 - margin.top - margin.bottom;
+
+    // Create SVG element
+    const svg = d3.select("#chart")
+                  .attr("width", width + margin.left + margin.right)
+                  .attr("height", height + margin.top + margin.bottom)
+                  .append("g")
+                  .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    // Create scales with customizable ranges and intervals
+    const xScale = d3.scaleLinear()
+                     .domain([Math.floor(xMin / xInterval) * xInterval, Math.ceil(xMax / xInterval) * xInterval])
+                     .range([0, width]);
+
+    const yScale = d3.scaleLinear()
+                     .domain([Math.floor(yMin / yInterval) * yInterval, Math.ceil(yMax / yInterval) * yInterval])
+                     .range([height, 0]);
+
+    // Draw circles
+    svg.selectAll("circle")
+       .data(data)
+       .enter().append("circle")
+       .attr("cx", d => xScale(d.x))
+       .attr("cy", d => yScale(d.y))
+       .attr("r", 5)
+       .attr("fill", "Maroon");
+
+    // Add X axis label
+    svg.append("text")
+       .attr("x", width / 2)
+       .attr("y", height + margin.top - 10)
+       .attr("text-anchor", "middle")
+       .style("font-size", "20px")
+       .text("Number of Radios");
+
+    // Add Y axis label
+    svg.append("text")
+       .attr("transform", "rotate(-90)")
+       .attr("x", -height / 2)
+       .attr("y", -margin.left + 22)
+       .attr("text-anchor", "middle")
+       .style("font-size", "20px")
+       .style("fill", "black")
+       .text("Number of Households");
+
+    // Add X axis
+    svg.append("g")
+       .attr("transform", `translate(0,${height})`)
+       .call(d3.axisBottom(xScale).ticks((xMax - xMin) / xInterval)); // Adjust tick count based on x interval
+
+    // Add Y axis
+    svg.append("g")
+       .call(d3.axisLeft(yScale).ticks((yMax - yMin) / yInterval)); // Adjust tick count based on y interval
+
+    // Add chart title
+    svg.append("text")
+       .attr("x", width / 2)
+       .attr("y", -margin.top / 2)
+       .attr("text-anchor", "middle")
+       .style("font-size", "20px")
+       .text("Scatter Plot showing Number of Households with Radios");
+  </script>
+</body>
+</html>

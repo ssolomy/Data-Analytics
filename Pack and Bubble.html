@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pack and Bubble </title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .node {
+            cursor: pointer;
+        }
+        
+        .node:hover {
+            stroke: #000;
+            stroke-width: 2;
+        }
+        
+        .child {
+            fill: Maroon;
+        }
+        
+        
+        .child-text {
+            fill: yellow;
+        }
+    </style>
+</head>
+<body>
+    <svg width="1000" height="1000">
+        <!-- Add title -->
+        <text x="400" y="100" text-anchor="middle" font-size="24" fill="black">Pack and Bubble showing Household Asset Distribution among Regions in Uganda </text>
+        <g id="chart" transform="translate(300,200)"></g>
+    </svg>
+
+    <script>
+        //  data
+        var data = {
+            name: "Uganda",
+            children: [
+                {
+                    name: "Eastern",
+                    value: 1743314,
+                    children: [
+                        { name: "Amuria", value: 48316},
+                        { name: "Budaka", value: 37219},
+                        { name: "Bududa", value: 36883},
+                        { name: "Bugiri", value: 74529} ,
+                        { name: "Bukedea", value: 36252}, 
+                        { name: "Bukwo", value: 16638},
+                        { name: "Bulambuli", value: 34028},
+                        { name: "Busia", value: 64812} ,
+                        { name: "Butaleja", value: 44376}, 
+                        { name: "Buyende", value: 61297},
+                        { name: "Iganga", value: 102703},
+                        { name: "Jinja", value: 105673} ,
+                        { name: "Kaberamaido", value: 38797},
+                        { name: "Kaliro", value: 42966},
+                        { name: "Kamuli", value: 93834},
+                        { name: "Kapchorwa", value: 20466}, 
+                        { name: "Katakwi", value: 30791},
+                        { name: "Kibuku", value: 35474},
+                        { name: "Kumi", value: 40805},
+                        { name: "Kween", value: 17870},
+                        { name: "Luuka", value: 44404} ,
+                        { name: "Manafwa", value: 72905},
+                        { name: "Mayuge", value: 95533} ,
+                        { name: "Mbale", value: 108813},
+                        { name: "Namayingo", value: 42942},
+                        { name: "Namutumba", value: 45322},
+                        { name: "Ngora", value: 23695},
+                        { name: "Pallisa", value: 65777} ,
+                        { name: "Serere", value: 47823},
+                        { name: "Sironko", value: 54735},
+                        { name: "Soroti", value: 55009},
+                        { name: "Tororo", value: 102627},
+
+                    ]
+                },
+                {
+                    name: "Northern",
+                    value: 1307642,
+                    children: [
+                        { name: "Abim", value: 18083},
+                        { name: "Adjumani", value: 41360},
+                        { name: "Agago", value: 43418},
+                        { name: "Alebtong", value: 46280},
+                        { name: "Amolatar", value: 27988},
+                        { name: "Amudat", value: 0 },
+                        { name: "Amuru", value: 36694},
+                        { name: "Apac", value: 71680},
+                        { name: "Arua", value: 146714},
+                        { name: "Dokolo", value: 34870},
+                        { name: "Gulu", value: 87120},
+                        { name: "Kaabong", value: 29211},
+                        { name: "Kitgum", value: 39726},
+                        { name: "Koboko", value: 30284},
+                        { name: "Kole", value: 48394},
+                        { name: "Kotido", value: 26192},
+                        { name: "Lamwo", value: 27185},
+                        { name: "Lira", value: 89170},
+                        { name: "Maracha", value: 36284},
+                        { name: "Moyo", value: 25881},
+                        { name: "Nakapiripirit", value: 25411},
+                        { name: "Napak", value: 26764},
+                        { name: "Nebbi", value: 77503},
+                        { name: "Nwoya", value: 24571},
+                        { name: "Otuke", value: 21957},
+                        { name: "Oyam", value: 76615},
+                        { name: "Pader", value: 34223},
+                        { name: "Yumbe", value: 63786},
+                        { name: "Zombo", value: 50278},
+                        
+                    ]
+                },
+                {
+                    name: "Central",
+                    value: 2306094,
+                    children: [
+                        { name: "Buikwe", value: 98153},
+                        { name: "Bukomansimbi", value: 34390},
+                        { name: "Butambala", value: 21724},
+                        { name: "Buvuma", value: 25183},
+                        { name: "Gomba", value: 35286},
+                         { name: "Bukomansimbi", value: 34390},
+                        { name: "Butambala", value: 21724},
+                        { name: "Buvuma", value: 25183},
+                        { name: "Gomba", value: 35286},
+                        { name: "Kalangala", value: 20100},
+                        { name: "Kalungu", value: 41494},
+                        { name: "Kampala", value: 416803},
+                        { name: "Kayunga", value: 76168},
+                        { name: "Kiboga", value: 34072},
+                        { name: "Kyankwanzi", value: 47773},
+                        { name: "Luwero", value: 105422},
+                        { name: "Lwengo", value: 61828},
+                        { name: "Lyantonde", value: 20639},
+                        { name: "Masaka", value: 75777},
+                        { name: "Mityana", value: 79903},
+                        { name: "Mpigi", value: 60523},
+                        { name: "Mubende", value: 151273},
+                        { name: "Mukono", value: 144632},
+                        { name: "Nakaseke", value: 43167},
+                        { name: "Nakasongola", value: 36314},
+                        { name: "Rakai", value: 116601},
+                        { name: "Ssembabule", value: 55427},
+                        { name: "Wakiso", value: 503442},
+                                                
+                    ]
+                },
+                {
+                    name: "Western",
+                    value: 1914365,
+                    children: [
+                        { name: "Buhweju", value: 24816},
+                        { name: "Buliisa", value: 21652},
+                        { name: "Bundibugyo", value: 44827},
+                        { name: "Bushenyi", value: 51363},
+                        { name: "Hoima", value: 125576},
+                        { name: "Ibanda", value: 55000},
+                        { name: "Isingiro", value: 101744},
+                        { name: "Kabale", value: 117903},
+                        { name: "Kabarole", value: 107464},
+                        { name: "Kamwange", value: 89068},
+                        { name: "Kanungu", value: 56109},
+                        { name: "Kasese", value: 138864},
+                        { name: "Kibaale", value: 168372},
+                        { name: "Kiruhura", value: 67302},
+                        { name: "Kiryandongo", value: 52223},
+                        { name: "Kisoro", value: 62290},
+                        { name: "Kyegegwa", value: 60085},
+                        { name: "Kyenjojo", value: 91532},
+                        { name: "Masindi", value: 64929},
+                        { name: "Mbarara", value: 113071},
+                        { name: "Mitooma", value: 39817},
+                        { name: "Ntoroko", value: 13942},
+                        { name: "Ntungamo", value: 101836},
+                        { name: "Rubirizi", value: 28798},
+                        { name: "Rukungiri", value: 69579},
+                        { name: "Sheema", value: 46203},
+                    ]
+                }
+            ]
+        };
+
+        // Set up pack layout
+        var pack = data => d3.pack()
+            .size([600, 600])
+            .padding(5)
+            (d3.hierarchy(data)
+                .sum(d => d.value)
+                .sort((a, b) => b.value - a.value));
+
+        // Create SVG element
+        var svg = d3.select("svg");
+
+        // Generate pack layout
+        var region = pack(data);
+
+        // Add circles
+        svg.select("#chart")
+            .selectAll("circle")
+            .data(region.descendants().slice(1))
+            .enter().append("circle")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => d.r)
+            .attr("fill", d => d.depth === 1 ? "Grey" : "Maroon") // Color differentiation for root and children circles
+            .attr("class", d => d.depth === 1 ? "node" : "child") // Class differentiation for root and children circles
+            .append("title")
+            .text(d => `${d.data.name}: ${d.value}`);
+
+        // Add labels
+        svg.select("#chart")
+            .selectAll("text")
+            .data(region.descendants().slice(1))
+            .enter().append("text")
+            .attr("x", d => d.x)
+            .attr("y", d => d.y)
+            .attr("text-anchor", "middle")
+            .attr("dy", "0.3em")
+            .attr("font-size", d => Math.min(d.r / 2, 14))
+            .attr("class", d => d.depth === 1 ? "node-text" : "child-text") // Class differentiation for root and children text
+            .attr("fill", d => d.depth === 1 ? "White" : "Black") // Color differentiation for root and children text
+            .text(d => d.data.name);
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pie Charts </title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .chart-container {
+      margin: 30px;
+    }
+    svg {
+      display: block;
+    }
+    .slice {
+      fill: steelblue;
+    }
+    .legend {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+    }
+    .legend rect {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: black;
+      stroke-width: 2px;
+    }
+    .legend text {
+      font-size: 14px;
+      fill: black;
+    }
+    .title {
+      font-family: Arial, sans-serif;
+      font-size: 24px;
+      margin-bottom: 1px;
+    }
+    .notation {
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      fill: black;
+      text-anchor: middle;
+    }
+    .region-label {
+      font-family: Arial, sans-serif;
+      font-size: 12px;
+      fill: white;
+      text-anchor: middle;
+    }
+    .percentage {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chart-container">
+    <div class="title">Pie Chart 1: Bicycles by Region</div>
+    <div class="chart1-container">
+      <svg width="300" height="300"></svg>
+    </div>
+  </div>
+
+  <div class="chart-container">
+    <div class="title">Pie Chart 2: Motorcycles by Region</div>
+    <div class="chart2-container">
+      <svg width="150" height="300"></svg>
+    </div>
+  </div>
+
+  <script>
+    // Data for the first pie chart (Bicycles by Region)
+    const data1 = [
+      { label: "Eastern", value: 713338 },
+      { label: "Northern", value: 597281 },
+      { label: "Central", value: 527222 },
+      { label: "Western", value: 487628 }
+    ];
+
+    // Data for the second pie chart (Motorcycle by Brand)
+    const data2 = [
+     
+      { label: "Eastern", value: 109191 },
+      { label: "Northern", value: 215154 },
+      { label: "Central", value: 258504 },
+      { label: "Western", value: 170011 }
+    ];
+
+    // Common dimensions for both charts
+    const width = 400;
+    const height = 400;
+    const radius = Math.min(width, height) / 2;
+
+    // Function to create pie chart
+    function createPieChart(container, data) {
+      const svg = d3.select(container)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2},${height / 2})`);
+
+      const color = d3.scaleOrdinal()
+        .domain(data.map(d => d.label))
+        .range(d3.schemeCategory10);
+
+      const pie = d3.pie()
+        .value(d => d.value);
+
+      const arc = d3.arc()
+        .innerRadius(0)
+        .outerRadius(radius);
+
+      const arcs = svg.selectAll(".arc")
+        .data(pie(data))
+        .enter().append("g")
+        .attr("class", "arc");
+
+      arcs.append("path")
+        .attr("d", arc)
+        .attr("fill", (d, i) => color(d.data.label));
+
+      arcs.append("text")
+        .attr("transform", d => `translate(${arc.centroid(d)})`)
+        .attr("dy", "0.35em")
+        .attr("class", "percentage")
+        .text(d => `${((d.endAngle - d.startAngle) / (2 * Math.PI) * 100).toFixed(1)}%`);
+
+      // Adding region names on top of percentages
+      arcs.append("text")
+        .attr("transform", d => `translate(${arc.centroid(d)})`)
+        .attr("dy", "-0.7em") // Adjust position above the percentage
+        .attr("class", "region-label")
+        .text(d => d.data.label);
+    }
+
+    // Create the first pie chart
+    createPieChart(".chart1-container", data1);
+
+    // Create the second pie chart
+    createPieChart(".chart2-container", data2);
+  </script>
+</body>
+</html>

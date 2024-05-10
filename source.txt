@@ -1,0 +1,4 @@
+http://catalog.data.ug/dataset/24f24456-719c-4ae8-b013-6f173f4cf8bc/resource/faa8db25-a227-4baf-ac6d-774d76a1fb0a/download/2014-census-dataownership-of-household-assets-and-mosquito-nets-in-uganda-by-district.csv
+
+Open Data Uganda
+The data shows the ownership of household assets and mosquito nets by sub-county in each district of Uganda.

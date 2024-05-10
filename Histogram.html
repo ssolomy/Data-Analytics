@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histogram </title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Add some basic styling */
+        .axis {
+            font-size: 14px;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+        }
+
+        .legend {
+            font-size: 14px;
+        }
+
+        .legend rect {
+            fill-opacity: 0.5;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            text-anchor: middle;
+        }
+
+        .xlabel,
+        .ylabel {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .legend-box {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+    <svg id="histogram" width="600" height="400"></svg>
+    <div id="legend"></div>
+
+    <script>
+        // Sample data with categories and colors
+        var data = [
+            { category: "1", value: 8.8, color: "grey", label: "Radio" },
+            { category: "2", value: 4.6, color: "steelblue", label: "Bicycle" },
+            { category: "3", value: 1.5, color: "green", label: "Motorcycle" },
+            { category: "4", value: 13.4, color: "orange", label: "Mosquito Net" }
+        ];
+
+        // Set up margins and dimensions for the chart
+        var margin = { top: 50, right: 30, bottom: 50, left: 60 },
+            width = 600 - margin.left - margin.right,
+            height = 400 - margin.top - margin.bottom;
+
+        // Create SVG element
+        var svg = d3.select("#histogram")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // Set up the scales
+        var x = d3.scaleBand()
+            .domain(data.map(function (d) { return d.category; }))
+            .range([0, width])
+            .padding(0.1);
+
+        var y = d3.scaleLinear()
+            .domain([0, d3.max(data, function (d) { return d.value; })])
+            .nice()
+            .range([height, 0]);
+
+        // Create bars
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", function (d) { return x(d.category); })
+            .attr("width", x.bandwidth())
+            .attr("y", function (d) { return y(d.value); })
+            .attr("height", function (d) { return height - y(d.value); })
+            .attr("fill", function (d) { return d.color; });
+
+        // Add x-axis
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // Add y-axis
+        svg.append("g")
+            .attr("class", "axis")
+            .call(d3.axisLeft(y));
+
+        // Add title
+        svg.append("text")
+            .attr("class", "title")
+            .attr("x", width / 2)
+            .attr("y", -margin.top / 2)
+            .text("Histogram Showing Number of House Hold Assets");
+
+        // Add x-axis label
+        svg.append("text")
+            .attr("class", "xlabel")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom / 1)
+            .text("House Hold Assets ");
+
+        // Add y-axis label
+        svg.append("text")
+            .attr("class", "ylabel")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height / 2)
+            .attr("y", -margin.left / 1.5)
+            .text("Millions ");
+
+        // Add legend
+        var legend = d3.select("#legend");
+        data.forEach(function (d) {
+            var legendItem = legend.append("div").attr("class", "legend-box");
+            legendItem.append("div")
+                .attr("class", "legend-color")
+                .style("background-color", d.color);
+            legendItem.append("div")
+                .attr("class", "legend-label")
+                .text(d.label);
+        });
+    </script>
+</body>
+</html>
